@@ -13,33 +13,36 @@ var gulp = require('gulp'),
     inquirer = require("inquirer"),
     fs = require('fs');
 
+let src_file = './src/PathFinding.js';
+let dst_dir = './visual/lib/';
+
 gulp.task('clean', function(cb) {
-    del('lib/**/*.*', cb);
+    return del('./visual/lib/pathfinding-*.js', cb);
 });
 
-gulp.task('browserify', gulp.series('clean'), function(cb) {
-    return gulp.src('./src/PathFinding.js')
+gulp.task('browserify', function(cb) {
+    return gulp.src(src_file)
     .pipe(browserify({ standalone: 'PF' }))
     .pipe(rename('pathfinding-browserified.js'))
-    .pipe(gulp.dest('./lib/'), cb);
+    .pipe(gulp.dest(dst_dir), cb);
 });
 
-gulp.task('uglify', gulp.series('browserify'), function(cb) {
-    return gulp.src('./lib/pathfinding-browserified.js')
+gulp.task('uglify', function(cb) {
+    return gulp.src(dst_dir + 'pathfinding-browserified.js')
     .pipe(uglify())
     .pipe(rename('pathfinding-browser.min.js'))
-    .pipe(gulp.dest('./lib/'), cb);
+    .pipe(gulp.dest(dst_dir), cb);
 });
 
-gulp.task('scripts', gulp.series('clean', 'browserify', 'uglify'), function(cb) {
-    return gulp.src(['./src/banner', './lib/pathfinding-browserified.js'])
+gulp.task('scripts', gulp.series('clean', 'browserify', 'uglify', function(cb) {
+    return gulp.src(['./src/banner', './visual/lib/pathfinding-browserified.js'])
     .pipe(concat('pathfinding-browser.js'))
-    .pipe(gulp.dest('./lib/'), cb);
-});
+    .pipe(gulp.dest(dst_dir), cb);
+}));
 
-gulp.task('compile', gulp.series('scripts'), function() {
-    del('./lib/pathfinding-browserified.js');
-});
+gulp.task('compile', gulp.series('scripts', function() {
+    return del('./visual/lib/pathfinding-browserified.js');
+}));
 
 gulp.task('test', function () {
     return gulp.src('./test/**/*.js', {read: false})
@@ -57,7 +60,7 @@ gulp.task('lint', function() {
     .pipe(jshint.reporter('fail'));
 });
 
-gulp.task('release', gulp.series('compile'), function(cb) {
+gulp.task('release', gulp.series('compile', function(cb) {
   inquirer.prompt({
       type: 'list',
       name: 'bumpType',
@@ -79,8 +82,8 @@ gulp.task('release', gulp.series('compile'), function(cb) {
 
       shell.exec('git clone https://github.com/imor/pathfinding-bower.git release');
       process.chdir('release');
-      fs.writeFileSync('pathfinding-browser.js', fs.readFileSync('../lib/pathfinding-browser.js'));
-      fs.writeFileSync('pathfinding-browser.min.js', fs.readFileSync('../lib/pathfinding-browser.min.js'));
+      fs.writeFileSync('pathfinding-browser.js', fs.readFileSync('../visual/lib/pathfinding-browser.js'));
+      fs.writeFileSync('pathfinding-browser.min.js', fs.readFileSync('../visual/lib/pathfinding-browser.min.js'));
 
       f = jsonfile.readFileSync('bower.json');
       f.version = semver.inc(f.version, result.bumpType);
@@ -96,7 +99,7 @@ gulp.task('release', gulp.series('compile'), function(cb) {
       del('release');
       del('lib/**/*.*', cb);
     });
-});
+}));
 
 gulp.task('default', gulp.series('lint', 'test', 'compile'), function() {
 });
