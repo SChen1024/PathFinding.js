@@ -17,27 +17,27 @@ gulp.task('clean', function(cb) {
     del('lib/**/*.*', cb);
 });
 
-gulp.task('browserify', ['clean'], function(cb) {
+gulp.task('browserify', gulp.series('clean'), function(cb) {
     return gulp.src('./src/PathFinding.js')
     .pipe(browserify({ standalone: 'PF' }))
     .pipe(rename('pathfinding-browserified.js'))
     .pipe(gulp.dest('./lib/'), cb);
 });
 
-gulp.task('uglify', ['browserify'], function(cb) {
+gulp.task('uglify', gulp.series('browserify'), function(cb) {
     return gulp.src('./lib/pathfinding-browserified.js')
     .pipe(uglify())
     .pipe(rename('pathfinding-browser.min.js'))
     .pipe(gulp.dest('./lib/'), cb);
 });
 
-gulp.task('scripts', ['clean', 'browserify', 'uglify'], function(cb) {
+gulp.task('scripts', gulp.series('clean', 'browserify', 'uglify'), function(cb) {
     return gulp.src(['./src/banner', './lib/pathfinding-browserified.js'])
     .pipe(concat('pathfinding-browser.js'))
     .pipe(gulp.dest('./lib/'), cb);
 });
 
-gulp.task('compile', ['scripts'], function() {
+gulp.task('compile', gulp.series('scripts'), function() {
     del('./lib/pathfinding-browserified.js');
 });
 
@@ -57,7 +57,7 @@ gulp.task('lint', function() {
     .pipe(jshint.reporter('fail'));
 });
 
-gulp.task('release', ['compile'], function(cb) {
+gulp.task('release', gulp.series('compile'), function(cb) {
   inquirer.prompt({
       type: 'list',
       name: 'bumpType',
@@ -98,5 +98,5 @@ gulp.task('release', ['compile'], function(cb) {
     });
 });
 
-gulp.task('default', ['lint', 'test', 'compile'], function() {
+gulp.task('default', gulp.series('lint', 'test', 'compile'), function() {
 });
