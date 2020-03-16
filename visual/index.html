@@ -46,6 +46,55 @@
       <header><h2 class="header_title">Select Algorithm</h2></header>
 
       <div class="accordion">
+
+        <h3 id="pso_header"><a href="#">PSO</a></h3>
+        <div id="pso_section" class="finder_section">
+          <header class="option_header">
+            <h3>Heuristic</h3>
+          </header>
+          <div id="pso_heuristic" class="sub_options">
+            <input type="radio" name="pso_heuristic" value="manhattan" checked />
+            <label class="option_label">Manhattan</label> <br>
+            <input type="radio" name="pso_heuristic" value="euclidean"/>
+            <label class="option_label">Euclidean</label> <br>
+            <input type="radio" name="pso_heuristic" value="octile"/>
+            <label class="option_label">Octile</label> <br>
+            <input type="radio" name="pso_heuristic" value="chebyshev"/>
+            <label class="option_label">Chebyshev</label> <br>
+          </div>
+
+          <header class="option_header">
+            <h3>Options</h3>
+          </header>
+          <div class="optional sub_options">
+            <input type="checkbox" class="allow_diagonal" checked>
+            <label class="option_label">Allow Diagonal</label> <br>
+            <!-- <input type="checkbox" class="bi-directional">
+            <label class="option_label">Bi-directional</label> <br> -->
+            <input type="checkbox" class="dont_cross_corners">
+            <label class="option_label">Don't Cross Corners</label> <br>
+
+            <input class="spinner" name="pso_weight" value="1">
+            <label class="option_label">Weight</label> <br>
+
+            <input class="spinner" name="pso_maxIterations" value="30">
+            <label class="option_label">Max Iterations</label>  <br>
+
+            <input class="spinner" name="pso_population" value="30"> 
+            <label class="option_label">Population</label> <br>
+
+            <input class="spinner" name="pso_inertiaWeight" value="0.6"> 
+            <label class="option_label">Inertia weight</label> <br>
+
+            <input class="spinner" name="pso_social" value="0.7"> 
+            <label class="option_label">Social influence</label> <br>
+
+            <input class="spinner" name="pso_personal" value="0.3"> 
+            <label class="option_label">Personal influence</label> <br>
+
+          </div>
+        </div>
+
         <h3 id="astar_header"><a href="#">A*</a></h3>
         <div id="astar_section" class="finder_section">
           <header class="option_header">
@@ -76,6 +125,7 @@
             <label class="option_label">Weight</label> <br>
           </div>
         </div>
+
 
         <h3 id="ida_header"><a href="#">IDA*</a></h3>
         <div id="ida_section" class="finder_section">

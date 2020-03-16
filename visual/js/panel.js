@@ -63,7 +63,41 @@ var Panel = {
                 });
             }
             break;
+        
+        case 'pso_header':
+            allowDiagonal = typeof $('#pso_section ' +
+                        '.allow_diagonal:checked').val() !== 'undefined';
+            dontCrossCorners = typeof $('#pso_section ' +
+                        '.dont_cross_corners:checked').val() !=='undefined';
 
+            /* parseInt returns NaN (which is falsy) if the string can't be parsed */
+            weight = parseInt($('#pso_section .spinner').val()) || 1;
+            weight = weight >= 1 ? weight : 1; /* if negative or 0, use 1 */
+
+            let max_iterations=30, population=15,inertia_weight=0.6,social_influence=0.7,personal_influence=0.3;
+
+            let pso_para = {max_iterations:30, population:15,inertia_weight:0.6,social_influence:0.7,personal_influence:0.3};
+
+            pso_para.max_iterations = parseInt($('input[name=pso_maxIterations]').val()) || pso_para.max_iterations;
+            pso_para.population = parseInt($('input[name=pso_population]').val()) || population;
+            pso_para.inertia_weight = parseFloat($('input[name=pso_inertiaWeight]').val()) || pso_para.inertia_weight;
+            pso_para.social_influence = parseFloat($('input[name=pso_social]').val()) || pso_para.social_influence;
+            pso_para.personal_influence = parseFloat($('input[name=pso_personal]').val()) || pso_para.personal_influence;
+
+
+            heuristic = $('input[name=pso_heuristic]:checked').val();
+
+            finder = new PF.PSOFinder({
+                allowDiagonal: allowDiagonal,
+                dontCrossCorners: dontCrossCorners,
+                heuristic: PF.Heuristic[heuristic],
+                weight: weight,
+                pso_para:pso_para
+                });
+
+            break;
+
+        
         case 'breadthfirst_header':
             allowDiagonal = typeof $('#breadthfirst_section ' +
                                      '.allow_diagonal:checked').val() !== 'undefined';
