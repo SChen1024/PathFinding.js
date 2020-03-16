@@ -1,4 +1,5 @@
 *.swp
+yarn.lock
 node_modules/
 /lib
 site/
